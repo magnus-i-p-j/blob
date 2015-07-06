@@ -71,7 +71,8 @@ gulp.task('copy', [
     'copy:license',
     'copy:main.css',
     'copy:misc',
-    'copy:normalize'
+    'copy:normalize',
+    'copy:matter'
 ]);
 
 gulp.task('copy:.htaccess', function () {
@@ -82,14 +83,21 @@ gulp.task('copy:.htaccess', function () {
 
 gulp.task('copy:index.html', function () {
     return gulp.src(dirs.src + '/index.html')
-               .pipe(plugins.replace(/{{JQUERY_VERSION}}/g, pkg.devDependencies.jquery))
+               .pipe(plugins.replace(/{{JQUERY_VERSION}}/g, pkg.dependencies.jquery))
+               .pipe(plugins.replace(/{{MATTER_VERSION}}/g, pkg.dependencies['matter-js']))
                .pipe(gulp.dest(dirs.dist));
 });
 
 gulp.task('copy:jquery', function () {
     return gulp.src(['node_modules/jquery/dist/jquery.min.js'])
-               .pipe(plugins.rename('jquery-' + pkg.devDependencies.jquery + '.min.js'))
+               .pipe(plugins.rename('jquery-' + pkg.dependencies.jquery + '.min.js'))
                .pipe(gulp.dest(dirs.dist + '/js/vendor'));
+});
+
+gulp.task('copy:matter', function () {
+    return gulp.src(['node_modules/matter-js/build/matter.min.js'])
+        .pipe(plugins.rename('matter-' + pkg.dependencies['matter-js'] + '.min.js'))
+        .pipe(gulp.dest(dirs.dist + '/js/vendor'));
 });
 
 gulp.task('copy:license', function () {
